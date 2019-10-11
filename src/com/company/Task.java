@@ -1,7 +1,5 @@
 package com.company;
 
-import java.util.ArrayList;
-
  class Task {
 
      private String description;
@@ -10,7 +8,6 @@ import java.util.ArrayList;
      Task(String description,String title){
          this.description=description;
          this.title=title;
-
      }
 
      public String getDescription() {
@@ -19,6 +16,4 @@ import java.util.ArrayList;
      public String getTitle() {
          return title;
      }
-
-
  }
