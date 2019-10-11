@@ -6,8 +6,8 @@ package com.company;
      private String title;
 
      Task(String description,String title){
-         this.description=description;
-         this.title=title;
+         this.description = description;
+         this.title = title;
      }
 
      public String getDescription() {
@@ -15,5 +15,11 @@ package com.company;
      }
      public String getTitle() {
          return title;
+     }
+
+     @Override
+     public String toString()
+     {
+         return title + " --- " + description ;
      }
  }
