@@ -26,6 +26,8 @@ public class Task implements Serializable {
         return LocalDate.parse(dateString, formatter);
     }
 
+    private String getTask(){};
+
     private String getDueDateAsString() {
         return dueDate.toString();
     }

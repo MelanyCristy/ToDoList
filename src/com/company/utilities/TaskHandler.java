@@ -149,7 +149,7 @@ public class TaskHandler {
         return new Task(title, dueDate, projectName);
     }
 
-    public void addTask() {
+    public ArrayList<Task> addTask() {
         Task newTask = null;
         try {
             newTask = createTaskFromInput();
@@ -177,6 +177,7 @@ public class TaskHandler {
                     break;
             }
         }
+        return null;
     }
 
     public int numberOfCompletedTasks() {
