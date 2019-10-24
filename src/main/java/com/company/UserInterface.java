@@ -4,24 +4,17 @@ import com.company.constants.MenuOptions;
 import com.company.constants.Output;
 import com.company.entities.Task;
 import com.company.enums.Status;
-import com.company.utilities.FileHelper;
-import com.company.utilities.IOHandler;
-import com.company.utilities.TaskSorter;
-import com.company.utilities.TaskValidator;
+import com.company.utilities.*;
 
 import java.util.ArrayList;
 
 public class UserInterface {
-    private final FileHelper fileHelper;
     private final IOHandler ioHandler;
-    private final TaskSorter taskSorter;
-    private ArrayList<Task> taskList;
+    private final TaskHandler taskHandler;
 
-    public UserInterface(FileHelper fileHelper, TaskSorter taskSorter, IOHandler ioHandler) {
-        this.fileHelper = fileHelper;
-        this.taskSorter = taskSorter;
+    public UserInterface(IOHandler ioHandler, TaskHandler taskHandler) {
         this.ioHandler = ioHandler;
-        taskList = fileHelper.getTasksFromFile();
+        this.taskHandler = taskHandler;
     }
 
     public void showMainMenu() {
@@ -41,7 +34,7 @@ public class UserInterface {
                     editTask();
                     break;
                 case MenuOptions.OptionFour:
-                    fileHelper.saveTasksToFile(taskList);
+                    taskHandler.saveTasks();
                     isRunning = false;
                     break;
                 default:
@@ -52,7 +45,7 @@ public class UserInterface {
 
     private void showTaskList() {
         printTasks();
-        if (!TaskValidator.taskListIsNotEmpty(taskList)) return;
+        if (!taskHandler.taskListIsNotEmpty()) return;
 
         ioHandler.output(Output.Info.SortByDateOrProject);
         boolean isRunning = true;
@@ -60,12 +53,12 @@ public class UserInterface {
             String selectedValue = ioHandler.getInput().toUpperCase();
             switch (selectedValue.toUpperCase()) {
                 case MenuOptions.OptionDate:
-                    this.taskList = taskSorter.sortByDueDate(this.taskList);
+                    taskHandler.sortTasksByDueDate();
                     showTaskList();
                     isRunning = false;
                     break;
                 case MenuOptions.OptionProject:
-                    this.taskList = taskSorter.sortByProject(this.taskList);
+                    taskHandler.sortTasksByProjectName();
                     showTaskList();
                     isRunning = false;
                     break;
@@ -80,7 +73,7 @@ public class UserInterface {
     }
 
     private void editTask() {
-        if (!TaskValidator.taskListIsNotEmpty(taskList)) {
+        if (!taskHandler.taskListIsNotEmpty()) {
             ioHandler.output(Output.Errors.NoTasksWarning);
             return;
         }
@@ -88,7 +81,7 @@ public class UserInterface {
         printTasks();
         ioHandler.output(Output.Info.ChooseTaskToEdit);
         String selectedTask = ioHandler.getInput();
-        if(TaskValidator.indexIsIntegerAndWithinBoundsOfArray(selectedTask, taskList.size())){
+        if(TaskValidator.indexIsIntegerAndWithinBoundsOfArray(selectedTask, taskHandler.numberOfTasks())){
             startEditMode(Integer.parseInt(selectedTask));
         } else {
             ioHandler.output(Output.Errors.InvalidOption);
@@ -96,7 +89,7 @@ public class UserInterface {
     }
 
     private void addTask() {
-        taskList.add(createTaskFromInput());
+        taskHandler.addTask(createTaskFromInput());
         ioHandler.output(Output.Info.YourTaskHasBeenAdded);
 
         boolean isRunning = true;
@@ -117,14 +110,6 @@ public class UserInterface {
         }
     }
 
-    private int numberOfCompletedTasks() {
-        return (int) taskList.stream().filter(x -> x.getStatus() == Status.Finished).count();
-    }
-
-    private int numberOfTasks() {
-        return taskList.size();
-    }
-
     private void startEditMode(int selectedTaskAsNumber) {
         ioHandler.output(Output.Info.EditOptions);
         String selectedValue = ioHandler.getInput().toUpperCase();
@@ -133,10 +118,10 @@ public class UserInterface {
                 updateTask(selectedTaskAsNumber);
                 break;
             case MenuOptions.OptionMarkDone:
-                taskList.get(selectedTaskAsNumber).setStatus(Status.Finished);
+                taskHandler.setTaskStatus(selectedTaskAsNumber, Status.Finished);
                 break;
             case MenuOptions.OptionRemove:
-                taskList.remove(selectedTaskAsNumber);
+                taskHandler.removeTask(selectedTaskAsNumber);
                 break;
             default:
                 ioHandler.output(Output.Errors.InvalidOption);
@@ -147,7 +132,7 @@ public class UserInterface {
 
     private void updateTask(int selectedIndex) {
         Task editedTask = createTaskFromInput();
-        taskList.set(selectedIndex, editedTask);
+        taskHandler.updateTask(selectedIndex, editedTask);
         ioHandler.output(Output.Info.YourTaskHasBeenAdded);
     }
 
@@ -165,6 +150,8 @@ public class UserInterface {
     }
 
     private void printTasks() {
+        ArrayList<Task> taskList = taskHandler.getTasks();
+
         if (TaskValidator.taskListIsNotEmpty(taskList)){
             for (int i = 0; i < taskList.size(); i++) {
                 ioHandler.output(i + ") " + taskList.get(i).toString());
@@ -176,7 +163,7 @@ public class UserInterface {
 
     private void printMainMenu() {
         ioHandler.output("Welcome to the to do list application");
-        ioHandler.output(String.format("You have %s tasks to do and %s tasks are done", numberOfTasks(), numberOfCompletedTasks()));
+        ioHandler.output(String.format("You have %s tasks to do and %s tasks are done", taskHandler.numberOfTasks(), taskHandler.numberOfCompletedTasks()));
         ioHandler.output("Pick an option: ");
         ioHandler.output(">> (1) Show Task List ");
         ioHandler.output(">> (2) Add New Task");
