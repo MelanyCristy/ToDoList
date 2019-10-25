@@ -90,6 +90,21 @@ public class UserInterfaceTests {
         verify(taskHandler, times(1)).getTasks();
     }
 
+   @Test
+   public void showMainMenus_and_remove_task(){
+        when(ioHandler.getInput())
+                .thenReturn("3")
+                .thenReturn("0")
+                .thenReturn("R")
+                .thenReturn("4");
+
+       when(taskHandler.taskListIsNotEmpty()).thenReturn(true);
+       userInterface.showMainMenu();
+
+       verify(taskHandler, times(1)).removeTask(0);
+
+   }
+
 
     private ArrayList<Task> createFakeTasks() {
         ArrayList<Task> taskList = new ArrayList<>();

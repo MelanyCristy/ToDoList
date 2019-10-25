@@ -20,16 +20,8 @@ public class Task implements Serializable {
         this.project = project;
     }
 
-    private LocalDate parseDate(String dateString) {
-        return LocalDate.parse(dateString, DateTimeFormatter.ofPattern(DateFormats.DateShortFormat));
-    }
-
     public LocalDate getDueDate() {
         return dueDate;
-    }
-
-    private String getDueDateAsString() {
-        return dueDate.toString();
     }
 
     public String getProject() {
@@ -47,5 +39,13 @@ public class Task implements Serializable {
     @Override
     public String toString() {
         return String.format("Title: %s. Due date: %s. Status: %s. Project: %s.", title, getDueDateAsString(), status, project);
+    }
+
+    private LocalDate parseDate(String dateString) {
+        return LocalDate.parse(dateString, DateTimeFormatter.ofPattern(DateFormats.DateShortFormat));
+    }
+
+    private String getDueDateAsString() {
+        return dueDate.toString();
     }
 }
