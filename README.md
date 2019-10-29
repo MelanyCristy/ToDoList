@@ -7,7 +7,7 @@
 
 
 ## User Manual
-As explained above, this aplication will allow an user to *create* new tasks, *assign* them a title and due date, and *choose* a project for that task to belong to. 
+As explained above, this application will allow an user to *create* new tasks, *assign* them a title and due date, and *choose* a project for that task to belong to. 
 1. **Main menu** is showed once the application has started. It should look like this:
 
 *>> Welcome to ToDoList*
@@ -26,7 +26,7 @@ As explained above, this aplication will allow an user to *create* new tasks, *a
 
 *>>* 
 
-2. If this is the user´s first time initiating the application, then, precede to **add new task** by pressing the option: 2
+2. If this is the user´s first time initiating the application, then, proceed to **add new task** by pressing the option: 2
 
 3. Continue, naming the task when the text: *">>Write the title of the task:"* and marking the **due date** of the task when this is shown: *">>Write the due date of the task (yyyy-MM-dd):"* 
 
