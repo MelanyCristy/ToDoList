@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class FileHelper {
 
-    @SuppressWarnings("unchecked")
+
     public ArrayList<Task> getTasksFromFile() {
         try {
             FileInputStream fileInputStream = new FileInputStream(Paths.PathToTaskFile);
